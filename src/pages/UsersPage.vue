@@ -28,16 +28,25 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
+import { useAuthStore } from '@/stores/authStore'
 import UserFilters from '@/components/users/UserFilters.vue'
 import UserTable from '@/components/users/UserTable.vue'
 import UserPagination from '@/components/users/UserPagination.vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
 import AppToast from '@/components/ui/AppToast.vue'
 
+const route = useRoute()
 const store = useUserStore()
+const authStore = useAuthStore()
 
 onMounted(() => {
+  const tokenFromQuery = route.query.token as string | undefined
+  if (tokenFromQuery) {
+    authStore.setToken(tokenFromQuery)
+  }
+
   store.loadUsers()
 })
 
